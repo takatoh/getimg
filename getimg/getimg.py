@@ -42,6 +42,13 @@ def main():
     args = parser.parse_args()
 
     url = args.url
+    opts = {
+        "url" : args.url,
+        "dir" : args.dir,
+        "tags" : args.tags,
+        "isdump" : args.dump,
+        "no_dl" : args.no_dl
+    }
 
     if args.user_agent:
         class Iopener(urllib.FancyURLopener):
@@ -60,7 +67,7 @@ def main():
         f = open(args.input_url)
         for image in f:
             image = image.rstrip()
-            info = get_image(image)
+            info = get_image(image, opts)
             log.append(info)
             print(image)
     else:
@@ -74,9 +81,9 @@ def main():
             print(soup.prettify())
             exit()
         if args.linked:
-            log = get_linked_images(soup)
+            log = get_linked_images(soup, opts)
         else:
-            log = get_embeded_images(soup)
+            log = get_embeded_images(soup, opts)
 
     if not args.dump:
         err_print("\n" + str(len(log)) + " images downloaded.")
@@ -90,7 +97,7 @@ def main():
         err_print("\nOutput log to " + yamlfile + ".")
 
 
-def get_linked_images(soup):
+def get_linked_images(soup, opts):
     images_list = []
     for a in soup("a"):
         for i in a("img"):
@@ -99,50 +106,50 @@ def get_linked_images(soup):
                 continue
             image = a2["href"]
             if re_image.match(image):
-                image = build_image_url(args.url, image)
+                image = build_image_url(opts["url"], image)
                 print(image)
-                if not args.dump:
+                if not opts["isdump"]:
                     try:
-                        info = get_image(image)
+                        info = get_image(image, opts)
                         images_list.append(info)
                     except IOError:
                         err_print("Error: failed to retrieve the image.")
     return images_list
 
 
-def get_embeded_images(soup):
+def get_embeded_images(soup, opts):
     images_list = []
     for i in soup("img"):
         image = i["src"]
         if re_image.match(image):
-            image = build_image_url(args.url, image)
+            image = build_image_url(opts["url"], image)
             print(image)
-            if not args.dump:
+            if not opts["isdump"]:
                 try:
-                    info = get_image(image)
+                    info = get_image(image, opts)
                     images_list.append(info)
                 except IOError:
                     err_print("Error: failed to retrieve the image.")
     return images_list
 
 
-def get_image(image):
-    file = url_to_filename(image)
-    if not (args.dump or args.no_dl):
+def get_image(image, opts):
+    file = url_to_filename(image, opts["dir"])
+    if not (opts["isdump"] or opts["no_dl"]):
         urlretrieve(image, file)
     return {
         'file' : str(os.path.basename(file)),
         'url' : str(image),
-        'page_url' : args.url,
-        'tags' : args.tags
+        'page_url' : opts["url"],
+        'tags' : opts["tags"]
     }
 
 
-def url_to_filename(url):
+def url_to_filename(url, dir):
     filename = url.split('/')[-1]
     filename = re.sub('\?.+', '', filename)
-    if args.dir:
-         filename = os.path.join(args.dir, filename)
+    if dir:
+         filename = os.path.join(dir, filename)
     return filename
 
 
