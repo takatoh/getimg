@@ -15,71 +15,6 @@ script_version = 'v0.6.0'
 re_image = re.compile(".+\.(jpg|jpeg|png|bmp|gif)")
 
 
-def get_linked_images(soup):
-    images_list = []
-    for a in soup("a"):
-        for i in a("img"):
-            a2 = i.parent
-            if "href" not in a2.attrs:
-                continue
-            image = a2["href"]
-            if re_image.match(image):
-                image = build_image_url(args.url, image)
-                print(image)
-                if not args.dump:
-                    try:
-                        info = get_image(image)
-                        images_list.append(info)
-                    except IOError:
-                        err_print("Error: failed to retrieve the image.")
-    return images_list
-
-
-def get_embeded_images(soup):
-    images_list = []
-    for i in soup("img"):
-        image = i["src"]
-        if re_image.match(image):
-            image = build_image_url(args.url, image)
-            print(image)
-            if not args.dump:
-                try:
-                    info = get_image(image)
-                    images_list.append(info)
-                except IOError:
-                    err_print("Error: failed to retrieve the image.")
-    return images_list
-
-
-def get_image(image):
-    file = url_to_filename(image)
-    if not (args.dump or args.no_dl):
-        urlretrieve(image, file)
-    return {'file' : str(os.path.basename(file)),
-            'url' : str(image),
-            'page_url' : args.url,
-            'tags' : args.tags}
-
-
-def url_to_filename(url):
-    filename = url.split('/')[-1]
-    filename = re.sub('\?.+', '', filename)
-    if args.dir:
-         filename = os.path.join(args.dir, filename)
-    return filename
-
-
-def build_image_url(base, image):
-    if re.match("\Ahttp", image):
-        return image
-    else:
-        return urljoin(base, image)
-
-
-def err_print(message):
-    sys.stderr.write(message + "\n")
-
-
 def main():
     parser = argparse.ArgumentParser(description="Download images from web page.")
     parser.add_argument('url', metavar='URL', action='store',
@@ -156,6 +91,71 @@ def main():
         f = open(yamlfile, 'w')
         f.write(yaml.dump(log))
         err_print("\nOutput log to " + yamlfile + ".")
+
+
+def get_linked_images(soup):
+    images_list = []
+    for a in soup("a"):
+        for i in a("img"):
+            a2 = i.parent
+            if "href" not in a2.attrs:
+                continue
+            image = a2["href"]
+            if re_image.match(image):
+                image = build_image_url(args.url, image)
+                print(image)
+                if not args.dump:
+                    try:
+                        info = get_image(image)
+                        images_list.append(info)
+                    except IOError:
+                        err_print("Error: failed to retrieve the image.")
+    return images_list
+
+
+def get_embeded_images(soup):
+    images_list = []
+    for i in soup("img"):
+        image = i["src"]
+        if re_image.match(image):
+            image = build_image_url(args.url, image)
+            print(image)
+            if not args.dump:
+                try:
+                    info = get_image(image)
+                    images_list.append(info)
+                except IOError:
+                    err_print("Error: failed to retrieve the image.")
+    return images_list
+
+
+def get_image(image):
+    file = url_to_filename(image)
+    if not (args.dump or args.no_dl):
+        urlretrieve(image, file)
+    return {'file' : str(os.path.basename(file)),
+            'url' : str(image),
+            'page_url' : args.url,
+            'tags' : args.tags}
+
+
+def url_to_filename(url):
+    filename = url.split('/')[-1]
+    filename = re.sub('\?.+', '', filename)
+    if args.dir:
+         filename = os.path.join(args.dir, filename)
+    return filename
+
+
+def build_image_url(base, image):
+    if re.match("\Ahttp", image):
+        return image
+    else:
+        return urljoin(base, image)
+
+
+def err_print(message):
+    sys.stderr.write(message + "\n")
 
 
 
