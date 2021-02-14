@@ -8,6 +8,7 @@ authors = ["takatoh"]
 python = "^3.8"
 PyYAML = "^5.4.1"
 beautifulsoup4 = "^4.9.3"
+lxml = "^4.6.2"
 
 [tool.poetry.dev-dependencies]
 
