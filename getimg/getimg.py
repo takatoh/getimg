@@ -1,6 +1,3 @@
-#!/usr/bin/env python
-# coding: utf-8
-
 import sys
 from urllib.request import urlopen, urlretrieve
 from urllib.parse import urlparse, urljoin
@@ -156,7 +153,3 @@ def build_image_url(base, image):
 
 def err_print(message):
     sys.stderr.write(message + "\n")
-
-
-
-main()
