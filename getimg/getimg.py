@@ -130,10 +130,12 @@ def get_image(image):
     file = url_to_filename(image)
     if not (args.dump or args.no_dl):
         urlretrieve(image, file)
-    return {'file' : str(os.path.basename(file)),
-            'url' : str(image),
-            'page_url' : args.url,
-            'tags' : args.tags}
+    return {
+        'file' : str(os.path.basename(file)),
+        'url' : str(image),
+        'page_url' : args.url,
+        'tags' : args.tags
+    }
 
 
 def url_to_filename(url):
