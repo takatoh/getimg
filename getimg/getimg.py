@@ -1,9 +1,9 @@
-import sys
 import urllib
 from urllib.request import urlopen, urlretrieve
 from urllib.parse import urlparse, urljoin
 import re
 import argparse
+import sys
 import os
 from bs4 import BeautifulSoup
 import yaml
