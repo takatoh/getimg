@@ -1,12 +1,12 @@
 import urllib
 from urllib.request import urlopen, urlretrieve
-from urllib.parse import urlparse, urljoin
-import re
-import argparse
-import sys
-import os
+from urllib.parse import urljoin
 from bs4 import BeautifulSoup
 import yaml
+import re
+import sys
+import os
+import argparse
 
 
 script_version = 'v0.1.0'
@@ -36,15 +36,17 @@ def main():
         except OSError:
             err_print("Directory exist: " + args.dir)
             exit()
+
     err_print("Download images from " + url + "\n")
+
     if args.input_url:
         log = []
-        f = open(args.input_url)
-        for image in f:
-            image = image.rstrip()
-            info = get_image(image, opts)
-            log.append(info)
-            print(image)
+        with open(args.input_url) as f:
+            for image in f:
+                image = image.rstrip()
+                info = get_image(image, opts)
+                log.append(info)
+                print(image)
     else:
         try:
             res = urlopen(url).read()
@@ -75,7 +77,7 @@ def main():
 def parse_arguments():
     parser = argparse.ArgumentParser(description="Download images from web page.")
     parser.add_argument('url', metavar='URL', action='store',
-                        help='specify URL')
+                        help='specify page URL')
     parser.add_argument('-v', '--version', action='version', version=script_version,
                         help='show version and exit')
     group = parser.add_mutually_exclusive_group()
