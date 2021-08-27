@@ -9,7 +9,7 @@ import os
 import argparse
 
 
-script_version = 'v0.1.0'
+script_version = 'v0.1.1'
 re_image = re.compile(".+\.(jpg|jpeg|png|bmp|gif)")
 
 
