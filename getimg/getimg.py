@@ -34,10 +34,10 @@ def main():
         try:
             os.makedirs(args.dir)
         except OSError:
-            err_print("Directory exist: " + args.dir)
+            err_print(f"Directory exist: {args.dir}")
             exit()
 
-    err_print("Download images from " + url + "\n")
+    err_print(f"Download images from {url}\n")
 
     if args.input_url:
         log = []
@@ -51,7 +51,7 @@ def main():
         try:
             res = urlopen(url).read()
         except IOError:
-            err_print("Error: failed to retrieve the page: " + url)
+            err_print(f"Error: failed to retrieve the page: {url}")
             exit()
         soup = BeautifulSoup(res, "lxml")
         if args.html:
@@ -63,7 +63,7 @@ def main():
             log = get_embeded_images(soup, opts)
 
     if not args.dump:
-        err_print("\n" + str(len(log)) + " images downloaded.")
+        err_print(f"\n{str(len(log))} images downloaded.")
 
     if args.sombrero:
         yamlfile = "images.yaml"
@@ -71,7 +71,7 @@ def main():
              yamlfile = os.path.join(args.dir, yamlfile)
         f = open(yamlfile, "w")
         f.write(yaml.dump(log))
-        err_print("\nOutput log to " + yamlfile + ".")
+        err_print(f"\nOutput log to {yamlfile}.")
 
 
 def parse_arguments():
