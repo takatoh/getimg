@@ -84,7 +84,7 @@ def parse_arguments():
         action='store',
         help='specify page URL')
     parser.add_argument(
-        '-v', '--version',
+        '-V', '--version',
         action='version',
         version=SCRIPT_VERSION,
         help='show version and exit')
