@@ -11,7 +11,7 @@ from . import __version__
 
 
 SCRIPT_VERSION = f'v{__version__}'
-RE_IMAGE = re.compile('.+\.(jpg|jpeg|png|bmp|gif)')
+RE_IMAGE = re.compile('.+\.(jpg|jpeg|png|bmp|gif)', flags=re.IGNORECASE)
 
 
 def main():
