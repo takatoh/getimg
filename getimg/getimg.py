@@ -10,8 +10,8 @@ import argparse
 from . import __version__
 
 
-script_version = f"v{__version__}"
-re_image = re.compile(".+\.(jpg|jpeg|png|bmp|gif)")
+SCRIPT_VERSION = f"v{__version__}"
+RE_IMAGE = re.compile(".+\.(jpg|jpeg|png|bmp|gif)")
 
 
 def main():
@@ -84,7 +84,7 @@ def parse_arguments():
         help="specify page URL")
     parser.add_argument("-v", "--version",
         action="version",
-        version=script_version,
+        version=SCRIPT_VERSION,
         help="show version and exit")
     group = parser.add_mutually_exclusive_group()
     group.add_argument("-e", "--embeded-image",
@@ -144,7 +144,7 @@ def get_linked_images(soup, opts):
             if "href" not in a2.attrs:
                 continue
             image = a2["href"]
-            if re_image.match(image):
+            if RE_IMAGE.match(image):
                 image = build_image_url(opts["url"], image)
                 print(image)
                 if not opts["isdump"]:
@@ -160,7 +160,7 @@ def get_embeded_images(soup, opts):
     images_list = []
     for i in soup("img"):
         image = i["src"]
-        if re_image.match(image):
+        if RE_IMAGE.match(image):
             image = build_image_url(opts["url"], image)
             print(image)
             if not opts["isdump"]:
