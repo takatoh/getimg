@@ -7,9 +7,10 @@ import re
 import sys
 import os
 import argparse
+from . import __version__
 
 
-script_version = "v0.1.1"
+script_version = f"v{__version__}"
 re_image = re.compile(".+\.(jpg|jpeg|png|bmp|gif)")
 
 
