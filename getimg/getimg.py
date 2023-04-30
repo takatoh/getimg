@@ -151,20 +151,18 @@ def parse_arguments():
 def get_linked_images(soup, opts):
     images_list = []
     for a in soup('a'):
-        for i in a('img'):
-            a2 = i.parent
-            if 'href' not in a2.attrs:
-                continue
-            image = a2['href']
-            if RE_IMAGE.match(image):
-                image = build_image_url(opts['url'], image)
-                print(image)
-                if not opts['isdump']:
-                    try:
-                        info = get_image(image, opts)
-                        images_list.append(info)
-                    except IOError:
-                        err_print('Error: failed to retrieve the image.')
+        if 'href' not in a.attrs:
+            continue
+        image = a['href']
+        if RE_IMAGE.match(image):
+            image = build_image_url(opts['url'], image)
+            print(image)
+            if not opts['isdump']:
+                try:
+                    info = get_image(image, opts)
+                    images_list.append(info)
+                except IOError:
+                    err_print('Error: failed to retrieve the image.')
     return images_list
 
 
