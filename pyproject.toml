@@ -5,10 +5,10 @@ description = "Get images from web page."
 authors = ["takatoh"]
 
 [tool.poetry.dependencies]
-python = "^3.8"
-PyYAML = "^5.4.1"
-beautifulsoup4 = "^4.9.3"
-lxml = "^4.6.2"
+python = "^3.10"
+PyYAML = "^6.0.0"
+beautifulsoup4 = "^4.12.0"
+lxml = "^5.0.0"
 
 [tool.poetry.dev-dependencies]
 
