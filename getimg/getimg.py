@@ -11,7 +11,7 @@ from . import __version__
 
 
 SCRIPT_VERSION = f"v{__version__}"
-RE_IMAGE = re.compile(".+\.(jpg|jpeg|png|bmp|gif)", flags=re.IGNORECASE)
+RE_IMAGE = re.compile(r".+\.(jpg|jpeg|png|bmp|gif)", flags=re.IGNORECASE)
 
 
 def main():
@@ -219,14 +219,14 @@ def get_image(image, opts):
 
 def url_to_filename(url, dir):
     filename = url.split("/")[-1]
-    filename = re.sub("\?.+", "", filename)
+    filename = re.sub(r"\?.+", "", filename)
     if dir:
         filename = os.path.join(dir, filename)
     return filename
 
 
 def build_image_url(base, image):
-    if re.match("\Ahttp", image):
+    if re.match(r"\Ahttp", image):
         return image
     else:
         return urljoin(base, image)
