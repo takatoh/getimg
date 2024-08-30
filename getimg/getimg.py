@@ -72,8 +72,8 @@ def main():
         yamlfile = "images.yaml"
         if args.dir and not args.dump:
             yamlfile = os.path.join(args.dir, yamlfile)
-        f = open(yamlfile, "w")
-        f.write(yaml.dump(log))
+        with open(yamlfile, "w") as f:
+            f.write(yaml.dump(log))
         err_print(f"\nOutput log to {yamlfile}.")
 
 
