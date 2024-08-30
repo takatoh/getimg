@@ -233,4 +233,4 @@ def build_image_url(base, image):
 
 
 def err_print(message):
-    sys.stderr.write(message + "\n")
+    print(message, file=sys.stderr)
