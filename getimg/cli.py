@@ -5,7 +5,7 @@ import yaml
 import os
 import argparse
 from . import __version__
-from getimg.getimg import (
+from .getimg import (
     err_print,
     get_linked_images,
     get_embeded_images,
