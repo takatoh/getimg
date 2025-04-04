@@ -5,3 +5,9 @@ poetry.lock
 *.yml
 *.yaml
 *.json
+
+*.jpg
+*.jpeg
+*.png
+*.bmp
+*.gif
