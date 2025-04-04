@@ -17,9 +17,13 @@ def get_linked_images(soup, opts):
         if "href" not in a.attrs:
             continue
         image = a["href"]
-        info = get_image(image, opts)
-        if info:
-            images_list.append(info)
+        try:
+            print(image)
+            info = get_image(image, opts)
+            if info:
+                images_list.append(info)
+        except IOError:
+            err_print("Error: failed to retrieve the image.")
     return images_list
 
 
@@ -27,9 +31,13 @@ def get_embeded_images(soup, opts):
     images_list = []
     for i in soup("img"):
         image = i["src"]
-        info = get_image(image, opts)
-        if info:
-            images_list.append(info)
+        try:
+            print(image)
+            info = get_image(image, opts)
+            if info:
+                images_list.append(info)
+        except IOError:
+            err_print("Error: failed to retrieve the image.")
     return images_list
 
 
@@ -38,19 +46,15 @@ def get_image(image, opts):
         image = build_image_url(opts["url"], image)
         print(image)
         if not opts["isdump"]:
-            try:
-                file = url_to_filename(image, opts["dir"])
-                if not opts["no_dl"]:
-                    urlretrieve(image, file)
-                return {
-                    "file": str(os.path.basename(file)),
-                    "url": str(image),
-                    "page_url": opts["url"],
-                    "tags": opts["tags"],
-                }
-            except IOError:
-                err_print("Error: failed to retrieve the image.")
-                return None
+            file = url_to_filename(image, opts["dir"])
+            if not opts["no_dl"]:
+                urlretrieve(image, file)
+            return {
+                "file": str(os.path.basename(file)),
+                "url": str(image),
+                "page_url": opts["url"],
+                "tags": opts["tags"],
+            }
         else:
             return None
     else:
