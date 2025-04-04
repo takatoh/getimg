@@ -55,10 +55,7 @@ def get_image(image, opts):
                 "page_url": opts["url"],
                 "tags": opts["tags"],
             }
-        else:
-            return None
-    else:
-        return None
+    return None
 
 
 def url_to_filename(url, dir):
