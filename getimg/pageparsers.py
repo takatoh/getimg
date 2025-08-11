@@ -78,9 +78,11 @@ class EShuuShuu(General):
             .find("div", class_="image_block")
         )
         image_path = image_block.find("a", class_="thumb_image")["href"]
-        return {
-            "file": str(os.path.basename(image_path)),
-            "url": image_path,
-            "page_url": opts["url"],
-            "tags": opts["tags"],
-        }
+        return [
+            {
+                "file": str(os.path.basename(image_path)),
+                "url": image_path,
+                "page_url": opts["url"],
+                "tags": opts["tags"],
+            }
+        ]
