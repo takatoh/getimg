@@ -1,4 +1,4 @@
-from urllib.request import urlretrieve
+import requests
 from urllib.parse import urljoin
 import re
 import sys
@@ -48,7 +48,10 @@ def get_image(image, opts):
         if not opts["isdump"]:
             file = url_to_filename(image, opts["dir"])
             if not opts["no_dl"]:
-                urlretrieve(image, file)
+                res = requests.get(image)
+                with open(file, "wb") as f:
+                    for chunk in res.iter_content(chunk_size=128):
+                        f.write(chunk)
             return {
                 "file": str(os.path.basename(file)),
                 "url": str(image),
