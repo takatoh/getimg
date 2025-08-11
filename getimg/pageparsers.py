@@ -1,5 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
+import os
 from . import (
     err_print,
     get_linked_images,
@@ -52,3 +53,34 @@ class General:
             "no_dl": self.no_dl,
         }
         return opts
+
+
+class EShuuShuu(General):
+    URL_BASE = "https://e-shuushuu.net"
+
+    def __init__(self, image_id, options):
+        super().__init__(options)
+        self.image_id = image_id
+        self.url = f"{self.URL_BASE}/images/{self.image_id}"
+
+    def get_linked_images(self, soup):
+        opts = self.options_for_getting_images()
+        image_list = self.get_images(self, soup, opts)
+        return image_list
+
+    def get_embeded_images(self, soup):
+        return self.get_linked_images(self, soup)
+
+    def get_images(self, soup, opts):
+        image_block = (
+            soup.find("div", id="content")
+            .find("div", class_="image_thread")
+            .find("div", class_="image_block")
+        )
+        image_path = image_block.find("a", class_="thumb_image")["href"]
+        return {
+            "file": str(os.path.basename(image_path)),
+            "url": image_path,
+            "page_url": opts["url"],
+            "tags": opts["tags"],
+        }
