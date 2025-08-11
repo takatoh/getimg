@@ -20,7 +20,7 @@ class General:
         except IOError:
             err_print(f"Error: failed to retrieve the page: {url}")
             exit()
-        soup = BeautifulSoup(res, "lxml")
+        soup = BeautifulSoup(res.content, "lxml")
         if self.html:
             print(soup.prettify())
             exit()
