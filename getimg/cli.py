@@ -1,14 +1,10 @@
 import urllib
-from urllib.request import urlopen
-from bs4 import BeautifulSoup
 import yaml
 import os
 import argparse
 from . import (
     __version__,
     err_print,
-    get_linked_images,
-    get_embeded_images,
     get_image,
 )
 from . import pageparsers
