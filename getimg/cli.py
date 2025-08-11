@@ -1,16 +1,12 @@
-import urllib
-from urllib.request import urlopen
-from bs4 import BeautifulSoup
 import yaml
 import os
 import argparse
 from . import (
     __version__,
     err_print,
-    get_linked_images,
-    get_embeded_images,
     get_image,
 )
+from . import pageparsers
 
 
 SCRIPT_VERSION = f"v{__version__}"
@@ -24,16 +20,11 @@ def main():
         "url": args.url,
         "dir": args.dir,
         "tags": args.tags,
+        "html": args.html,
+        "linked": args.linked,
         "isdump": args.dump,
         "no_dl": args.no_dl,
     }
-
-    if args.user_agent:
-
-        class Iopener(urllib.FancyURLopener):
-            version = args.user_agent
-
-        urllib._urlopener = Iopener()
 
     if args.dir and not args.dump:
         try:
@@ -53,19 +44,8 @@ def main():
                 log.append(info)
                 print(image)
     else:
-        try:
-            res = urlopen(url).read()
-        except IOError:
-            err_print(f"Error: failed to retrieve the page: {url}")
-            exit()
-        soup = BeautifulSoup(res, "lxml")
-        if args.html:
-            print(soup.prettify())
-            exit()
-        if args.linked:
-            log = get_linked_images(soup, opts)
-        else:
-            log = get_embeded_images(soup, opts)
+        parser = pageparsers.General(opts)
+        log = parser.parse(args.url)
 
     if not args.dump:
         err_print(f"\n{str(len(log))} images downloaded.")
@@ -124,14 +104,6 @@ def parse_arguments():
         action="store",
         default="",
         help="put tags. use with -s option",
-    )
-    parser.add_argument(
-        "-u",
-        "--user-agent",
-        dest="user_agent",
-        metavar="AGENT",
-        action="store",
-        help="specify user-agent",
     )
     parser.add_argument(
         "-i",
