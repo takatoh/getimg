@@ -1,7 +1,13 @@
 import requests
 from bs4 import BeautifulSoup
 import os
-from . import err_print, RE_IMAGE, build_image_url, url_to_filename
+from . import (
+    err_print,
+    RE_IMAGE,
+    build_image_url,
+    url_to_filename,
+    get_linked_images,
+)
 
 
 class General:
@@ -31,18 +37,14 @@ class General:
         return log
 
     def get_linked_images(self, soup):
-        images_list = []
-        for a in soup("a"):
-            if "href" not in a.attrs:
-                continue
-            image = a["href"]
-            try:
-                print(image)
-                info = self.get_image(image)
-                if info:
-                    images_list.append(info)
-            except IOError:
-                err_print("Error: failed to retrieve the image.")
+        opts = {
+            "url": self.url,
+            "tags": self.tags,
+            "isdump": self.isdump,
+            "dir": self.dir,
+            "no_dl": self.no_dl,
+        }
+        images_list = get_linked_images(soup, opts)
         return images_list
 
     def get_embeded_images(self, soup):
