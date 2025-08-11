@@ -1,11 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
-import os
 from . import (
     err_print,
-    RE_IMAGE,
-    build_image_url,
-    url_to_filename,
     get_linked_images,
     get_embeded_images,
 )
@@ -46,25 +42,6 @@ class General:
         opts = self.options_for_getting_images()
         images_list = get_embeded_images(soup, opts)
         return images_list
-
-    def get_image(self, image):
-        if RE_IMAGE.match(image):
-            image = build_image_url(self.url, image)
-            print(image)
-            if not self.isdump:
-                file = url_to_filename(image, self.dir)
-                if not self.no_dl:
-                    res = requests.get(image)
-                    with open(file, "wb") as f:
-                        for chunk in res.iter_content(chunk_size=128):
-                            f.write(chunk)
-                return {
-                    "file": str(os.path.basename(file)),
-                    "url": str(image),
-                    "page_url": self.url,
-                    "tags": self.tags,
-                }
-        return None
 
     def options_for_getting_images(self):
         opts = {
