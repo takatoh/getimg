@@ -7,6 +7,7 @@ from . import (
     build_image_url,
     url_to_filename,
     get_linked_images,
+    get_embeded_images,
 )
 
 
@@ -42,16 +43,8 @@ class General:
         return images_list
 
     def get_embeded_images(self, soup):
-        images_list = []
-        for i in soup("img"):
-            image = i["src"]
-            try:
-                print(image)
-                info = self.get_image(image)
-                if info:
-                    images_list.append(info)
-            except IOError:
-                err_print("Error: failed to retrieve the image.")
+        opts = self.options_for_getting_images()
+        images_list = get_embeded_images(soup, opts)
         return images_list
 
     def get_image(self, image):
