@@ -37,13 +37,7 @@ class General:
         return log
 
     def get_linked_images(self, soup):
-        opts = {
-            "url": self.url,
-            "tags": self.tags,
-            "isdump": self.isdump,
-            "dir": self.dir,
-            "no_dl": self.no_dl,
-        }
+        opts = self.options_for_getting_images()
         images_list = get_linked_images(soup, opts)
         return images_list
 
@@ -78,3 +72,13 @@ class General:
                     "tags": self.tags,
                 }
         return None
+
+    def options_for_getting_images(self):
+        opts = {
+            "url": self.url,
+            "tags": self.tags,
+            "isdump": self.isdump,
+            "dir": self.dir,
+            "no_dl": self.no_dl,
+        }
+        return opts
