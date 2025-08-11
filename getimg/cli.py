@@ -1,4 +1,3 @@
-import urllib
 import yaml
 import os
 import argparse
@@ -26,13 +25,6 @@ def main():
         "isdump": args.dump,
         "no_dl": args.no_dl,
     }
-
-    if args.user_agent:
-
-        class Iopener(urllib.FancyURLopener):
-            version = args.user_agent
-
-        urllib._urlopener = Iopener()
 
     if args.dir and not args.dump:
         try:
@@ -112,14 +104,6 @@ def parse_arguments():
         action="store",
         default="",
         help="put tags. use with -s option",
-    )
-    parser.add_argument(
-        "-u",
-        "--user-agent",
-        dest="user_agent",
-        metavar="AGENT",
-        action="store",
-        help="specify user-agent",
     )
     parser.add_argument(
         "-i",
