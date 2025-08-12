@@ -80,6 +80,13 @@ class EShuuShuu(General):
         )
         image_path = image_block.find("a", class_="thumb_image")["href"]
         image_url = self.URL_BASE + image_path
+        tag_spans = (
+            image_block.find("div", class_="meta")
+            .find("dd", class_="quicktag")
+            .find_all("span")
+        )
+        tags = [span.find("a").text.replace(" ", "_") for span in tag_spans]
+        tags = opts["tags"].split(" ") + tags
         print(image_url)
         if not opts["isdump"]:
             file = url_to_filename(image_url, opts["dir"])
@@ -93,7 +100,7 @@ class EShuuShuu(General):
                         "file": str(os.path.basename(file)),
                         "url": str(image_url),
                         "page_url": opts["url"],
-                        "tags": opts["tags"],
+                        "tags": " ".join(tags),
                     }
                 ]
         return None
