@@ -5,7 +5,7 @@ import sys
 import os
 
 
-__version__ = "0.5.0"
+__version__ = "0.5.1"
 
 
 RE_IMAGE = re.compile(r".+\.(jpg|jpeg|png|bmp|gif)", flags=re.IGNORECASE)
