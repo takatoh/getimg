@@ -1,11 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 import os
-from . import (
-    err_print,
-    get_linked_images,
-    get_embeded_images,
-)
+from . import err_print, get_linked_images, get_embeded_images, url_to_filename
 
 
 class General:
@@ -58,18 +54,23 @@ class General:
 class EShuuShuu(General):
     URL_BASE = "https://e-shuushuu.net"
 
-    def __init__(self, image_id, options):
-        super().__init__(options)
-        self.image_id = image_id
-        self.url = f"{self.URL_BASE}/images/{self.image_id}"
+    # def __init__(self, image_id, options):
+    #    super().__init__(options)
+    #    self.image_id = image_id
+    #    self.url = f"{self.URL_BASE}/image/{self.image_id}"
+
+    def parse(self, image_id):
+        self.url = f"{self.URL_BASE}/image/{image_id}/"
+        print(f"url={self.url}")
+        return super().parse(self.url)
 
     def get_linked_images(self, soup):
         opts = self.options_for_getting_images()
-        image_list = self.get_images(self, soup, opts)
+        image_list = self.get_images(soup, opts)
         return image_list
 
     def get_embeded_images(self, soup):
-        return self.get_linked_images(self, soup)
+        return self.get_linked_images(soup)
 
     def get_images(self, soup, opts):
         image_block = (
@@ -78,11 +79,21 @@ class EShuuShuu(General):
             .find("div", class_="image_block")
         )
         image_path = image_block.find("a", class_="thumb_image")["href"]
-        return [
-            {
-                "file": str(os.path.basename(image_path)),
-                "url": image_path,
-                "page_url": opts["url"],
-                "tags": opts["tags"],
-            }
-        ]
+        image_url = self.URL_BASE + image_path
+        print(image_url)
+        if not opts["isdump"]:
+            file = url_to_filename(image_url, opts["dir"])
+            if not opts["no_dl"]:
+                res = requests.get(image_url)
+                with open(file, "wb") as f:
+                    for chunk in res.iter_content(chunk_size=128):
+                        f.write(chunk)
+                return [
+                    {
+                        "file": str(os.path.basename(file)),
+                        "url": str(image_url),
+                        "page_url": opts["url"],
+                        "tags": opts["tags"],
+                    }
+                ]
+        return None

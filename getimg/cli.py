@@ -46,7 +46,7 @@ def main():
     else:
         if args.e_shuushuu:
             # print(f"id={args.url}")
-            parser = pageparsers.EShuuShuu(args.url, opts)
+            parser = pageparsers.EShuuShuu(opts)
         else:
             parser = pageparsers.General(opts)
         log = parser.parse(args.url)
