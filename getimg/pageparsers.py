@@ -1,10 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
-from . import (
-    err_print,
-    get_linked_images,
-    get_embeded_images,
-)
+import os
+from . import err_print, get_linked_images, get_embeded_images, url_to_filename
 
 
 class General:
@@ -52,3 +49,58 @@ class General:
             "no_dl": self.no_dl,
         }
         return opts
+
+
+class EShuuShuu(General):
+    URL_BASE = "https://e-shuushuu.net"
+
+    # def __init__(self, image_id, options):
+    #    super().__init__(options)
+    #    self.image_id = image_id
+    #    self.url = f"{self.URL_BASE}/image/{self.image_id}"
+
+    def parse(self, image_id):
+        self.url = f"{self.URL_BASE}/image/{image_id}/"
+        print(f"url={self.url}")
+        return super().parse(self.url)
+
+    def get_linked_images(self, soup):
+        opts = self.options_for_getting_images()
+        image_list = self.get_images(soup, opts)
+        return image_list
+
+    def get_embeded_images(self, soup):
+        return self.get_linked_images(soup)
+
+    def get_images(self, soup, opts):
+        image_block = (
+            soup.find("div", id="content")
+            .find("div", class_="image_thread")
+            .find("div", class_="image_block")
+        )
+        image_path = image_block.find("a", class_="thumb_image")["href"]
+        image_url = self.URL_BASE + image_path
+        tag_spans = (
+            image_block.find("div", class_="meta")
+            .find("dd", class_="quicktag")
+            .find_all("span")
+        )
+        tags = [span.find("a").text.replace(" ", "_") for span in tag_spans]
+        tags = opts["tags"].split(" ") + tags
+        print(image_url)
+        if not opts["isdump"]:
+            file = url_to_filename(image_url, opts["dir"])
+            if not opts["no_dl"]:
+                res = requests.get(image_url)
+                with open(file, "wb") as f:
+                    for chunk in res.iter_content(chunk_size=128):
+                        f.write(chunk)
+                return [
+                    {
+                        "file": str(os.path.basename(file)),
+                        "url": str(image_url),
+                        "page_url": opts["url"],
+                        "tags": " ".join(tags),
+                    }
+                ]
+        return None
