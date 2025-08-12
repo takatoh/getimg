@@ -44,7 +44,11 @@ def main():
                 log.append(info)
                 print(image)
     else:
-        parser = pageparsers.General(opts)
+        if args.e_shuushuu:
+            # print(f"id={args.url}")
+            parser = pageparsers.EShuuShuu(args.url, opts)
+        else:
+            parser = pageparsers.General(opts)
         log = parser.parse(args.url)
 
     if not args.dump:
@@ -140,6 +144,12 @@ def parse_arguments():
         dest="no_dl",
         action="store_true",
         help="not download images",
+    )
+    parser.add_argument(
+        "--e-shuushuu",
+        action="store_true",
+        dest="e_shuushuu",
+        help="Parse e-shuushuu.net by image id",
     )
     args = parser.parse_args()
     return args
