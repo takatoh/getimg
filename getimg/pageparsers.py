@@ -54,11 +54,6 @@ class General:
 class EShuuShuu(General):
     URL_BASE = "https://e-shuushuu.net"
 
-    # def __init__(self, image_id, options):
-    #    super().__init__(options)
-    #    self.image_id = image_id
-    #    self.url = f"{self.URL_BASE}/image/{self.image_id}"
-
     def parse(self, image_id):
         self.url = f"{self.URL_BASE}/image/{image_id}/"
         print(f"url={self.url}")
